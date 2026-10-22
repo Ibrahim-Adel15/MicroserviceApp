@@ -22,13 +22,11 @@ The services communicate with each other over HTTP. The application does not use
 │   ├── app.py
 │   ├── requirements.txt
 │   └── Dockerfile
-├── notification/
-│   ├── app.py
-│   ├── requirements.txt
-│   └── Dockerfile
-└── logs/
-    ├── backend/
-    └── notification/
+ ── notification/
+    ├── app.py
+    ├── requirements.txt
+    └── Dockerfile
+
 ```
 
 ## 3. How the Services Work Together
@@ -147,53 +145,6 @@ The notification service hostname must be resolvable and reachable from the back
 | `GET` | `/messages` | Returns all stored messages as JSON. |
 | `POST` | `/messages` | Validates and stores a new message. |
 
-#### Retrieve Messages
-
-Request:
-
-```http
-GET /messages
-```
-
-Example response:
-
-```json
-{
-  "messages": [
-    "Hello Docker",
-    "Learning microservices"
-  ]
-}
-```
-
-#### Create a Message
-
-Request:
-
-```http
-POST /messages
-Content-Type: application/json
-```
-
-Request body:
-
-```json
-{
-  "message": "Hello Docker"
-}
-```
-
-Example response:
-
-```json
-{
-  "status": "success",
-  "message": "Hello Docker"
-}
-```
-
-A successfully created message returns HTTP status `201`.
-
 ### Application Data
 
 The backend stores messages in:
@@ -250,32 +201,6 @@ The notification service does not require any custom environment variables in th
 | `GET` | `/health` | Returns the notification service health status. |
 | `POST` | `/notify` | Receives a message and records it in the application log. |
 
-#### Example Notification Request
-
-Request:
-
-```http
-POST /notify
-Content-Type: application/json
-```
-
-Request body:
-
-```json
-{
-  "message": "Hello Docker"
-}
-```
-
-Example response:
-
-```json
-{
-  "status": "notification recorded",
-  "message": "Hello Docker"
-}
-```
-
 ### Logging
 
 The notification service writes its application logs to:
@@ -321,7 +246,6 @@ Application data and logs are kept in separate paths. The actual persistence of 
 
 - The three services are separate applications with distinct responsibilities.
 - The frontend calls the backend; it does not call the notification service directly.
-- The backend stores messages in a JSON file, not a database.
 - The backend calls the notification service after saving a message.
 - The notification service simulates notification handling by writing log entries.
 - The frontend uses standard logging output; the backend and notification service write dedicated log files.
